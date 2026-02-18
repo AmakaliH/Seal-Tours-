@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seal Tours | Dynamic Discovery</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --gradient-start: #3d2b1f; 
+            --gradient-end: #8b5a2b;   
+            --lark-gold: #c5a059;
+            --white-glass: rgba(255, 255, 255, 0.98);
+            --text-light: #f4e9d9;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+
+        /* Navigation */
+        .nav-luxe {
+            padding: 5px 6%; height: 80px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(61, 43, 31, 0.98); backdrop-filter: blur(10px); 
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo { font-weight: 600; letter-spacing: 4px; text-transform: uppercase; font-size: 1.1rem; color: var(--lark-gold); margin: 0; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { text-decoration: none; color: white; margin-left: 30px; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; transition: 0.3s; }
+
+        /* Dropdown CSS */
+        .nav-dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(61, 43, 31, 0.98);
+            min-width: 140px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%;
+            left: 30px;
+        }
+        .dropdown-content a {
+            color: white !important;
+            padding: 12px 16px;
+            margin: 0 !important;
+            display: block;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a:hover { background: var(--lark-gold); color: #3d2b1f !important; }
+
+        /* Duration Buttons Styling */
+        .duration-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
+        .btn-duration { 
+            flex: 1; 
+            font-size: 0.75rem; 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            background: #fff; 
+            color: #333;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        .btn-duration.active { background: var(--gradient-start); color: #fff; border-color: var(--gradient-start); }
+
+        /* Dynamic Tab System */
+        .tab-container { background: var(--white-glass); color: #1a1a1a; padding: 0; margin-top: 50px; border-radius: 4px; overflow: hidden; }
+        .tab-menu { display: flex; flex-wrap: wrap; background: #f8f1e9; border-bottom: 1px solid #ddd; list-style: none; padding: 0; margin: 0; }
+        .tab-link { padding: 20px 25px; cursor: pointer; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; border-right: 1px solid #eee; transition: 0.3s; color: #888; }
+        .tab-link.active { background: var(--white-glass); color: var(--gradient-start); border-bottom: 2px solid var(--lark-gold); }
+        .tab-link:hover { background: #fff; color: var(--gradient-start); }
+
+        .tab-content { display: none; padding: 40px; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Carousel Styling */
+        .tour-carousel { border-radius: 8px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .tour-carousel .carousel-item img { height: 350px; object-fit: cover; }
+
+        /* Itinerary Styling */
+        .price-display { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--lark-gold); margin-bottom: 10px; }
+        .itinerary-list { list-style: none; padding: 0; margin: 25px 0; }
+        .itinerary-item { position: relative; padding-left: 30px; margin-bottom: 15px; font-size: 0.9rem; color: #444; }
+        .itinerary-item::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--lark-gold); border-radius: 50%; }
+        .day-label { font-weight: 700; color: var(--gradient-start); text-transform: uppercase; font-size: 0.65rem; }
+
+        /* Footer */
+        footer { background: rgba(0,0,0,0.3); padding: 60px 6%; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .contact-box { font-size: 0.8rem; line-height: 1.8; opacity: 0.8; }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-button { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: #25d366; color: #fff; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; text-decoration: none; }
+        .whatsapp-button:hover { transform: scale(1.1); background-color: #128c7e; color: #fff; }
+        
+        .logo-wrapper { display: flex; align-items: center; gap: 12px; }
+        .nav-logo-luxe { height: 60px; width: auto; object-fit: contain; }
+    </style>
+</head>
+<body id="home">
+    <header class="nav-luxe">
+        <a href="#home" class="logo-wrapper" style="text-decoration: none;">
+            <img src="Img/logo.jpg" alt="Seal Tours Logo" class="nav-logo-luxe">
+            <h1 class="logo">Seal Tours</h1>
+        </a>
+        <nav class="nav-links">
+            <a href="Test.html">Home</a>
+            <a href="gallery.html">Gallery</a>
+            <div class="nav-dropdown">
+                <a href="#">Safari <i class="bi bi-chevron-down small"></i></a>
+                <div class="dropdown-content">
+                    <a href="safari1.html">Private Tour</a>
+                    <a href="safari2.html">Safari 2</a>
+                </div>
+            </div>
+            <a href="daytrip.html">Day Trips</a>
+        </nav>
+    </header>
+
+ <section id="tours" class="container" style="padding-top: 150px;">
+        <span style="letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; color: var(--lark-gold); font-weight: 700;">Our Tours</span>
+        <h2 style="font-size: 3.5rem;">Explore by Destination</h2>
+
+        <div class="tab-container shadow-lg">
+            <ul class="tab-menu">
+                <li class="tab-link active" onclick="openTab(event, 'sossusvlei')">Sossusvlei</li>
+                <li class="tab-link" onclick="openTab(event, 'etosha')">Etosha</li>
+                <li class="tab-link" onclick="openTab(event, 'swakopmund')">Swakopmund</li>
+                <li class="tab-link" onclick="openTab(event, 'north')">The North</li>
+                <li class="tab-link" onclick="openTab(event, 'hardap')">Hardap</li>
+                <li class="tab-link" onclick="openTab(event, 'damaraland')">Damara Land</li>
+                <li class="tab-link" onclick="openTab(event, 'coast')">Skeleton Coast</li>
+                <li class="tab-link" onclick="openTab(event, 'Shuttle')">Shuttle</li>
+            </ul>
+
+            <div id="sossusvlei" class="tab-content active">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselSossus" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/sous.avif" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/vlei.jpg" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselSossus" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselSossus" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="price-display">US 1,027.45</div>
+                        <h3>Magical Sossusvlei</h3>
+                        <p class="text-muted small">Where the tallest dunes in the world meet the white clay pan of Deadvlei.</p>
+                        <ul class="itinerary-list">
+                            <li class="itinerary-item"><span class="day-label">Day 1</span> Scenic travel through the Naukluft Mountains.</li>
+                            <li class="itinerary-item"><span class="day-label">Day 2</span> Sunrise dune climb and Deadvlei walk.</li>
+                        </ul>
+                        <button onclick="openBooking('Sossusvlei', 0)" class="btn btn-dark px-4 py-2">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="etosha" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselEtosha" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/tosha.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/etosaf.jpg" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselEtosha" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselEtosha" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="price-display">US </div>
+                        <h3>Etosha Wildlife Safari</h3>
+                        <p class="text-muted small">A sanctuary for lions, elephants, and the rare black rhino.</p>
+                        <button onclick="openBooking('Etosha Safari', 0)" class="btn btn-dark px-4 py-2">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="swakopmund" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselSwakop" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/swakop.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/beach.webp" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselSwakop" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselSwakop" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Coastal Swakopmund</h3>
+                        <p class="text-muted">Adventure meets colonial charm at the Atlantic coast.</p>
+                        <button onclick="openBooking('Swakopmund', 0)" class="btn btn-dark px-4 py-2">Book Swakopmund</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="north" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselNorth" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/kaprivi.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/river.jpg" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselNorth" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselNorth" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>The Lush North</h3>
+                        <p class="text-muted">Explore the Kavango and Zambezi regions.</p>
+                        <button onclick="openBooking('The North', 0)" class="btn btn-dark px-4 py-2">Book the North</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hardap" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselHardap" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/hardap.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/dap.JPG" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHardap" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselHardap" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Hardap Dam Resort</h3>
+                        <p class="text-muted">Namibia's largest dam and recreation center.</p>
+                        <button onclick="openBooking('Hardap Dam', 0)" class="btn btn-dark px-4 py-2">Book Hardap</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="damaraland" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouseldamaraland" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/damara.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/art.jpg" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouseldamaraland" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouseldamaraland" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Damara Land</h3>
+                        <p class="text-muted">Namibia's largest dam and recreation center.</p>
+                        <button onclick="openBooking('Damara Land', 0)" class="btn btn-dark px-4 py-2">Book Damara Land</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="coast" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselcoast" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="img/seals.jpg" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="img/scoasr.jpg" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselcoast" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselcoast" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Skeleton Coast</h3>
+                        <p class="text-muted">Namibia's largest dam and recreation center.</p>
+                        <button onclick="openBooking('Sekelton Coast', 0)" class="btn btn-dark px-4 py-2">Book Skeleton Coast</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Shuttle" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="carouselShuttle" class="carousel slide tour-carousel" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="https://images.unsplash.com/photo-1512411933596-3398c869be02?q=80&w=800" class="d-block w-100"></div>
+                                <div class="carousel-item"><img src="https://images.unsplash.com/photo-1534067783941-51c9c23eccfd?q=80&w=800" class="d-block w-100"></div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselShuttle" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselShuttle" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Shuttle Booking</h3>
+                        <p class="text-muted">Adventure meets colonial charm at the Atlantic coast.</p>
+                        <button onclick="openBooking('Shuttle', 0)" class="btn btn-dark px-4 py-2">Book Shuttle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="padding: 80px 0;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <span style="color: var(--lark-gold); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 3px;">Personalized Namibia Tours</span>
+                <h2 style="font-size: 3rem; margin-top: 10px;">Private Guided Safaris</h2>
+                <p style="opacity: 0.8; line-height: 1.8;">Experience the ultimate in flexibility and expertise. Our private guided tours ensure you have a dedicated specialist and vehicle, allowing for a deep, immersive connection with the Namibian wilderness at your own pace.</p>
+                <div class="row mt-4">
+                    <div class="col-6"><i class="bi bi-person-check-fill text-warning"></i><p class="small">Expert Guides</p></div>
+                    <div class="col-6"><i class="bi bi-calendar-check-fill text-warning"></i><p class="small">Custom Itinerary</p></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800" class="img-fluid rounded shadow-lg" alt="Private Safari">
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--white-glass); color: #1a1a1a; border: none;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tourTitle">Request Quote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label class="small fw-bold">Select Duration</label>
+                            <div class="duration-selector">
+                                <button type="button" class="btn btn-duration" onclick="setDuration(this, '3 Days')">3 Days</button>
+                                <button type="button" class="btn btn-duration" onclick="setDuration(this, '6 Days')">6 Days</button>
+                                <button type="button" class="btn btn-duration" onclick="setDuration(this, '11 Days')">11 Days</button>
+                                <button type="button" class="btn btn-duration" onclick="setDuration(this, '16 Days')">16 Days</button>
+                            </div>
+                            <input type="hidden" id="selectedDuration" value="Not Specified">
+                        </div>
+                        <div class="mb-2"><label class="small fw-bold">Full Name</label><input type="text" class="form-control" id="userName" required></div>
+                        <div class="row mb-2">
+                            <div class="col-6"><label class="small fw-bold">Email</label><input type="email" class="form-control" id="userEmail" required></div>
+                            <div class="col-6"><label class="small fw-bold">Phone</label><input type="tel" class="form-control" id="userPhone" required></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6"><label class="small fw-bold">Date</label><input type="date" class="form-control" id="tourDate" required></div>
+                            <div class="col-6"><label class="small fw-bold">Guests</label><input type="number" class="form-control" id="guests" min="1" value="1"></div>
+                        </div>
+                        <div class="mb-3"><label class="small fw-bold">Special Requests</label><textarea class="form-control" id="specialRequests" rows="2"></textarea></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="sendToWhatsApp()">SEND TO WHATSAPP</button></div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-4">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Location</h4>
+                    <a href="https://maps.google.com/?q=ERF+58+Hintrager+Pioneers+Park+Windhoek" target="_blank" style="text-decoration: none; color: inherit;">
+                        <p class="contact-box"><i class="bi bi-geo-alt-fill me-2" style="color: var(--lark-gold);"></i>ERF 58 Hintrager Pioneers Park, Windhoek</p>
+                    </a>
+                </div>
+                <div class="col-md-4 text-md-center">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Call Now</h4>
+                    <div class="d-flex flex-column align-items-md-center gap-2">
+                        <a href="tel:+264852717300" class="btn btn-outline-light btn-sm w-75">+264 85 271 7300</a>
+                        <a href="tel:+264812717300" class="btn btn-outline-light btn-sm w-75">+264 81 271 7300</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Inquiries</h4>
+                    <a href="mailto:sealtoursandairporttransferscc@gmail.com" class="btn btn-sm" style="background: var(--lark-gold); color: #fff;">EMAIL US</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        function setDuration(btn, days) {
+            document.querySelectorAll('.btn-duration').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('selectedDuration').value = days;
+        }
+
+        function openBooking(tourName, basePrice) {
+            document.getElementById('tourTitle').innerText = "Booking: " + tourName;
+            document.querySelectorAll('.btn-duration').forEach(b => b.classList.remove('active'));
+            document.getElementById('selectedDuration').value = "Not Specified";
+            new bootstrap.Modal(document.getElementById('bookingModal')).show();
+        }
+
+        function sendToWhatsApp() {
+            const tour = document.getElementById('tourTitle').innerText;
+            const dur = document.getElementById('selectedDuration').value;
+            const name = document.getElementById('userName').value;
+            const date = document.getElementById('tourDate').value;
+            const guests = document.getElementById('guests').value;
+
+            if(!name || !date || dur === "Not Specified") { alert("Please complete all details including duration."); return; }
+
+            const msg = `*Seal Tours Inquiry*%0A*Tour:* ${tour}%0A*Duration:* ${dur}%0A*Name:* ${name}%0A*Date:* ${date}%0A*Guests:* ${guests}`;
+            window.open(`https://wa.me/264852717300?text=${msg}`, '_blank');
+        }
+    </script>
+    <a href="https://wa.me/264852717300" class="whatsapp-button" target="_blank"><i class="bi bi-whatsapp"></i></a>
+</body>
+</html>

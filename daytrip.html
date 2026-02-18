@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seal Tours | Dynamic Discovery</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --gradient-start: #3d2b1f; 
+            --gradient-end: #8b5a2b;   
+            --lark-gold: #c5a059;
+            --white-glass: rgba(255, 255, 255, 0.98);
+            --text-light: #f4e9d9;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 300; }
+
+        .nav-luxe {
+            padding: 5px 6%; height: 80px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(61, 43, 31, 0.98); backdrop-filter: blur(10px); 
+            position: fixed; top: 0; width: 100%; z-index: 2000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo { font-weight: 600; letter-spacing: 4px; text-transform: uppercase; font-size: 1.1rem; color: var(--lark-gold); margin: 0; }
+        .nav-links a { text-decoration: none; color: white; margin-left: 30px; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; transition: 0.3s; }
+
+        /* Carousel Styles */
+        .carousel-luxe { margin-bottom: 50px; border-radius: 15px; overflow: hidden; }
+        .carousel-item img { height: 300px; object-fit: cover; border-radius: 10px; filter: brightness(0.8); }
+
+        /* Trip Cards */
+        .trip-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .trip-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-5px); }
+        .trip-type-badge {
+            font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--lark-gold); border: 1px solid var(--lark-gold);
+            padding: 2px 8px; border-radius: 20px; margin-bottom: 10px; display: inline-block;
+        }
+        .btn-luxe {
+            background: var(--lark-gold); color: white; font-size: 0.7rem;
+            letter-spacing: 2px; border: none; padding: 10px 20px; border-radius: 4px; transition: 0.3s;
+        }
+        .btn-luxe:hover { background: #b38f4d; color: white; }
+
+        .logo-wrapper { display: flex; align-items: center; gap: 12px; }
+        .nav-logo-luxe { height: 60px; width: auto; object-fit: contain; }
+
+        footer { background: rgba(0,0,0,0.3); padding: 60px 6%; margin-top: 100px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .contact-box { font-size: 0.8rem; line-height: 1.8; opacity: 0.8; }
+    </style>
+</head>
+<body id="home">
+    <header class="nav-luxe">
+        <a href="#home" class="logo-wrapper" style="text-decoration: none;">
+            <img src="Img/logo.jpg" alt="Seal Tours Logo" class="nav-logo-luxe">
+            <h1 class="logo">Seal Tours</h1>
+        </a>
+        <nav class="nav-links">
+            <a href="test.html">Home</a>
+            <a href="Gallery.html">Day Trips</a>
+        </nav>
+    </header>
+
+    <section id="tours" class="container" style="padding-top: 100px;">
+        <h2 style="font-size: 3.5rem; margin-bottom: 30px;">Other Activities</h2>
+
+        <div id="autoGallery" class="carousel slide carousel-luxe" data-bs-ride="carousel" data-bs-interval="3000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-2">
+                        <div class="col-3"><img src="Img1/single.webp" class="d-block w-100" alt="1"></div>
+                        <div class="col-3"><img src="Img1/kapana.webp" class="d-block w-100" alt="2"></div>
+                        <div class="col-3"><img src="Img1/church.jpg" class="d-block w-100" alt="3"></div>
+                        <div class="col-3"><img src="Img1/museum.png" class="d-block w-100" alt="4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-6 border-end border-secondary border-opacity-25">
+                <h3 class="mb-4" style="color: var(--lark-gold);">Self-Drive Adventures</h3>
+                <div class="trip-card">
+                    <span class="trip-type-badge">4x4 Rental</span>
+                    <h4>Coastal Dunes Explorer</h4>
+                    <p class="small opacity-75">Take the wheel of a fully equipped 4x4 and navigate the stunning dunes.</p>
+                    <button class="btn btn-luxe" onclick="openBooking('Coastal Dunes Explorer', 2500)">BOOK VEHICLE</button>
+                </div>
+                <div class="trip-card">
+                    <span class="trip-type-badge">Custom Route</span>
+                    <h4>Etosha Freedom Trail</h4>
+                    <p class="small opacity-75">We provide the vehicle and the GPS-mapped route; you provide the curiosity.</p>
+                    <button class="btn btn-luxe" onclick="openBooking('Etosha Freedom Trail', 3200)">PLAN MY TRIP</button>
+                </div>
+            </div>
+
+            <div class="col-md-6 ps-md-5">
+                <h3 class="mb-4" style="color: var(--lark-gold);">Windhoek City Exploration</h3>
+                <div class="trip-card">
+                    <span class="trip-type-badge">Guided Drive</span>
+                    <h4>Historic Windhoek Loop</h4>
+                    <p class="small opacity-75">Visit the Christuskirche and Tintenpalast with a professional guide.</p>
+                    <button class="btn btn-luxe" onclick="openBooking('Historic Windhoek Loop', 850)">BOOK TOUR</button>
+                </div>
+                <div class="trip-card">
+                    <span class="trip-type-badge">Culture</span>
+                    <h4>Katutura Vibrant Spirit</h4>
+                    <p class="small opacity-75">Experience the heart of Windhoek. Visit local markets and community centers.</p>
+                    <button class="btn btn-luxe" onclick="openBooking('Katutura Vibrant Spirit', 650)">BOOK TOUR</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: var(--white-glass); color: #1a1a1a; border: none;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tourTitle" style="font-family: 'Cormorant Garamond'; font-weight: 600;">Request Quote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-2"><label class="small fw-bold">Full Name</label><input type="text" class="form-control" id="userName" required></div>
+                        <div class="row mb-2">
+                            <div class="col-6"><label class="small fw-bold">Email</label><input type="email" class="form-control" id="userEmail" required></div>
+                            <div class="col-6"><label class="small fw-bold">Phone</label><input type="tel" class="form-control" id="userPhone" required></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6"><label class="small fw-bold">Date</label><input type="date" class="form-control" id="tourDate" required></div>
+                            <div class="col-6"><label class="small fw-bold">Guests</label><input type="number" class="form-control" id="guests" min="1" value="1"></div>
+                        </div>
+                        <div class="mb-3"><label class="small fw-bold">Special Requests</label><textarea class="form-control" id="specialRequests" rows="2"></textarea></div>
+                        <div class="p-2 bg-light rounded text-center">Estimated Price: <h4 class="mb-0" style="color: var(--lark-gold);">N$ <span id="calcPrice">0</span></h4></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-dark w-100" onclick="sendToWhatsApp()">SEND TO WHATSAPP</button></div>
+            </div>
+        </div>
+    </div>
+
+     <footer id="contact">
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-4">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Location</h4>
+                    <a href="https://maps.google.com/?q=ERF+58+Hintrager+Pioneers+Park+Windhoek" target="_blank" style="text-decoration: none; color: inherit;">
+                        <p class="contact-box"><i class="bi bi-geo-alt-fill me-2" style="color: var(--lark-gold);"></i>ERF 58 Hintrager Pioneers Park, Windhoek<br><span style="text-decoration: underline; font-size: 0.7rem;">View on Map</span></p>
+                    </a>
+                </div>
+                <div class="col-md-4 text-md-center">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Call Now</h4>
+                    <div class="d-flex flex-column align-items-md-center gap-2">
+                        <a href="tel:+264852717300" class="btn btn-outline-light btn-sm w-75">+264 85 271 7300</a>
+                        <a href="tel:+264812717300" class="btn btn-outline-light btn-sm w-75">+264 81 271 7300</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h4 style="color:var(--lark-gold); font-size: 0.9rem; text-transform: uppercase;">Inquiries</h4>
+                    <a href="mailto:sealtoursandairporttransferscc@gmail.com" class="btn btn-sm" style="background: var(--lark-gold); color: #fff;">EMAIL US</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openBooking(tourName, basePrice) {
+            document.getElementById('tourTitle').innerText = "Booking: " + tourName;
+            document.getElementById('calcPrice').innerText = basePrice;
+            var myModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            myModal.show();
+        }
+
+        function sendToWhatsApp() {
+            const tour = document.getElementById('tourTitle').innerText;
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const date = document.getElementById('tourDate').value;
+            const guests = document.getElementById('guests').value;
+            const requests = document.getElementById('specialRequests').value || "None";
+            const price = document.getElementById('calcPrice').innerText;
+
+            if(!name || !phone || !date) { alert("Please fill in required fields."); return; }
+
+            const message = `*Seal Tours Booking Request*%0A` +
+                            `----------------------------%0A` +
+                            `*Tour:* ${tour}%0A` +
+                            `*Client:* ${name}%0A` +
+                            `*Phone:* ${phone}%0A` +
+                            `*Date:* ${date}%0A` +
+                            `*Guests:* ${guests}%0A` +
+                            `*Requests:* ${requests}%0A` +
+                            `*Est. Total:* N$ ${price}`;
+
+            window.open(`https://wa.me/264852717300?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
